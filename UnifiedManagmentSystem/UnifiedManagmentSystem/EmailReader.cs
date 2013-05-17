@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Mail;
 using AE.Net.Mail;
 
 
@@ -18,16 +17,26 @@ namespace UnifiedManagmentSystem
     class EmailReader
     {
 
-        public void Run()
-        {
-             using (var ic = new AE.Net.Mail.ImapClient("imap.gmail.com", "email@gmail.com", "mypassword", ImapClient.AuthMethods.Login, 993, true))
-             {
-                 ic.SelectMailbox("INBOX");
-
+        //public void Run()
+            /* using (var ic = new AE.Net.Mail.ImapClient("imap.gmail.com", "email@gmail.com", "mypassword", ImapClient.AuthMethods.Login, 993, true))
+             {    ic.SelectMailbox("INBOX");
+                  ic.NewMessage ice = new EventHandler<AE.Net.Mail.Imap.MessageEventArgs>(object sender, EventArgs e);
+             }*/
                 //AE.Net.Mail.MailMessage mm = 
-                ic.NewMessage
                  //(0, 1, false, false);
+    public List<MailMessage> ReadMail()
+    {
+        List<MailMessage> msgs;
+        using (var ic = new AE.Net.Mail.ImapClient("imap.gmail.com", "username@gmail.com", "pass-to-gmail", ImapClient.AuthMethods.Login, 993, true))
+        {
+            ic.SelectMailbox("INBOX");
+            msgs = new List<MailMessage>(ic.GetMessageCount());
+            msgs = ic.GetMessages(0, 100, false, true).ToList();
 
+            ic.Disconnect();
+        }
+        return msgs;
+    }
          
     //            Logger.WriteLine("IMAP : Found " + mm.Count() + " messages in Inbox");
 
@@ -45,7 +54,7 @@ namespace UnifiedManagmentSystem
     //    }
     //}
 
-    ic.Disconnect();
+    //ic.Disconnect();
   }
 }
 
