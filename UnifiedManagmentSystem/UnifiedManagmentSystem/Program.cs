@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace UnifiedManagmentSystem
 {
@@ -14,6 +15,10 @@ namespace UnifiedManagmentSystem
         [MTAThread]
         static void Main()
         {
+            EmailReader ER = new EmailReader();
+            Thread messageSearcher = new Thread(new ThreadStart(ER.Run));
+            messageSearcher.Start();
+            System.Console.WriteLine("DONE!!");
             //create a Creator Object
 
             //create an EmailReader object

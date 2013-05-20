@@ -35,6 +35,9 @@
     <Reference Include="AE.Net.Mail">
       <HintPath>..\packages\AE.Net.Mail.1.7.8.0\lib\net45\AE.Net.Mail.dll</HintPath>
     </Reference>
+    <Reference Include="S22.Imap">
+      <HintPath>..\packages\S22.Imap.3.2.4813.36815\lib\net40\S22.Imap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -58,6 +61,7 @@
     </Compile>
     <Compile Include="Email.cs" />
     <Compile Include="EmailReader.cs" />
+    <Compile Include="EmailRefinerThread.cs" />
     <Compile Include="LaunchForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -103,6 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
