@@ -18,58 +18,77 @@ namespace UnifiedManagmentSystem
         private const int MILLIS_TO_WAIT_refine = 10;//lower these numbers to possibly speed up response
         private const int MILLIS_TO_WAIT_main = 20;
         Lazy<MailMessage>[] messages=new Lazy<MailMessage>[10];
-       
-        public void Run(){
-            Console.WriteLine("running");
+        public List<Email> sendtoDBEMailMessages = new List<Email>(100);
 
-            while(true){
-                Console.WriteLine("GOT HERE");
-                using (var ic = new AE.Net.Mail.ImapClient("IMAP.gmail.com", "pilhlip@gmail.com", /*PhillipsPassword*/, ImapClient.AuthMethods.Login, 993, true)){
+        public void Run(){
+            //Console.WriteLine("running");
+
+            
+                //Console.WriteLine("GOT HERE");
+                using (var ic = new AE.Net.Mail.ImapClient("IMAP.gmail.com", "pilhlip@gmail.com", "TUBA2112", ImapClient.AuthMethods.Login, 993, true)){
                     ic.SelectMailbox("INBOX");
                     bool headersOnly = false;
                     //initial population of new/unseen messages
-                    Console.WriteLine("connected?");
+                    //Console.WriteLine("connected?");
+                    while (true)
+                    {
                     try
                     {
                         Monitor.Enter(this);
                         messages = ic.SearchMessages(SearchCondition.Unseen(), headersOnly);
+                        
                     }
                     finally
                     {
                         Monitor.Exit(this);
                     }
-                    
-                    Console.WriteLine("spawning child thread");
+                    //Console.WriteLine("spawning child thread");
                     //need to spawn a thread with the mesages array to check for more conditions
                     Thread messageSearcher = new Thread(new ThreadStart(refine));
                     messageSearcher.Start();
-                    Console.WriteLine("Child Spawned");
+                   // Console.WriteLine("Child Spawned");
                     messageSearcher.Join();
-                    Console.WriteLine("child joined");
                 }
             }
         }
         public void refine()
         {
-            Console.WriteLine("in child code");
+            //Console.WriteLine("in child code");
             try
             {
-
                 Monitor.Enter(this);
                 foreach (Lazy<MailMessage> message in messages)
                 {
                     MailMessage m = message.Value;
                     string sender = m.From.Address;
-
-                    Console.WriteLine("Email with subject {0} was sent by sender {1}, at {2}", m.Subject, sender, m.Date);
-
-
+                    if (sender.Equals("magicstd@uwf.edu"))
+                    {
+                        Email MagicMessage = new Email();
+                        MagicMessage.MessageType = "magic";
+                        sendtoDBEMailMessages.Add(MagicMessage);
+                        Console.WriteLine("Email with subject {0} was sent by sender {1}, at {2}", m.Subject, sender, m.Date);
+                    }
+                    else if (sender.Equals("ajh29@students.uwf.edu"))
+                    {
+                        Email andyMessage = new Email();
+                        andyMessage.MessageType = "andy";
+                        sendtoDBEMailMessages.Add(andyMessage);
+                        Console.WriteLine("Email with subject {0} was sent by sender {1}, at {2}", m.Subject, sender, m.Date);
+                    }
+                    else if (sender.Equals("message.center@smtp.schooldude.com"))//need to double check this is the correct sender
+                    {
+                        Email SDMessage = new Email();
+                        SDMessage.MessageType = "sd";
+                        sendtoDBEMailMessages.Add(SDMessage);
+                        Console.WriteLine("Email with subject {0} was sent by sender {1}, at {2}", m.Subject, sender, m.Date);
+                    }
+                    //else Console.WriteLine("No New Workorders");
                 }
             }
             finally
             {
                 Monitor.Exit(this);
-                Console.WriteLine("exiting");
+                //Console.WriteLine("exiting");
             }
         }
 #region unused code
@@ -115,13 +134,17 @@ namespace UnifiedManagmentSystem
         //if there is an earlier DateTime email this is a new email
         //note* need to check this quickly or if emails come in at
         //note* close intervals item will be missed.
+        //done
 
         //if this new email is from a sender that is contained in the
         //"workorder senders" list, we have a useful email
+        //done, but implemented differently
 
         //grab the clients full name, argonetID, room#, Description
         //of problem, and if filed in Magic or SchoolDude
+        //to-be completed
 
         //create an email object with this data
+        //started, not finished
     }
 }
