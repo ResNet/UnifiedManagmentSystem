@@ -63,22 +63,20 @@ namespace UnifiedManagmentSystem
                     string sender = m.From.Address;
                     if (sender.Equals("magicstd@uwf.edu"))
                     {
-                        Email MagicMessage = new Email();
-                        MagicMessage.MessageType = "magic";
+                        Email MagicMessage = new Email("magic",m.Body);
                         sendtoDBEMailMessages.Add(MagicMessage);
                         Console.WriteLine("Email with subject {0} was sent by sender {1}, at {2}", m.Subject, sender, m.Date);
                     }
-                    else if (sender.Equals("ajh29@students.uwf.edu"))
+                    /*else if (sender.Equals("ajh29@students.uwf.edu"))
                     {
                         Email andyMessage = new Email();
                         andyMessage.MessageType = "andy";
                         sendtoDBEMailMessages.Add(andyMessage);
                         Console.WriteLine("Email with subject {0} was sent by sender {1}, at {2}", m.Subject, sender, m.Date);
-                    }
+                    }*/
                     else if (sender.Equals("message.center@smtp.schooldude.com"))//need to double check this is the correct sender
                     {
-                        Email SDMessage = new Email();
-                        SDMessage.MessageType = "sd";
+                        Email SDMessage = new Email("sd", m.Body);
                         sendtoDBEMailMessages.Add(SDMessage);
                         Console.WriteLine("Email with subject {0} was sent by sender {1}, at {2}", m.Subject, sender, m.Date);
                     }
